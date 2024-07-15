@@ -38,3 +38,4 @@ env: |
     value: "8080"
   - name: JAEGER_SAMPLER_PARAM
     value: "1"
+serviceAccount: egov-sa       

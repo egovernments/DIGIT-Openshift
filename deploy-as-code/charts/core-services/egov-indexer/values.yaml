@@ -77,4 +77,7 @@ env: |
     valueFrom:
       secretKeyRef:
         name: elasticsearch-credentials
-        key: password   
+        key: password  
+serviceAccount: egov-sa
+securityContext:
+  runAsUser: 0

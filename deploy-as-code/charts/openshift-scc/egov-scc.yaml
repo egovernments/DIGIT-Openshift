@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: egov-sa
+  namespace: egov
+---
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: egov-scc
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: true
+allowHostPID: false
+allowHostPorts: true
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: false
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+- KILL
+- MKNOD
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:egov:egov-sa
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret
+allowedCapabilities:
+- NET_BIND_SERVICE
+seccompProfiles:
+- "runtime/default"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: egov-scc
+  namespace: egov
+rules:
+- apiGroups:
+  - security.openshift.io
+  resourceNames:
+  - egov-scc
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: egov-scc
+  namespace: egov
+subjects:
+  - kind: ServiceAccount
+    name: egov-sa
+    namespace: egov
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: egov-scc
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: egov-view-services
+  namespace: egov
+rules:
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: egov-view-services-binding
+  namespace: egov
+subjects:
+- kind: ServiceAccount
+  name: egov-sa
+  namespace: egov
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: egov-view-services
+

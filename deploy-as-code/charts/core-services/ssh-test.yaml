@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ssh-test
+  namespace: egov
+spec:
+  containers:
+  - name: ssh-test
+    image: ubuntu
+    command: ["/bin/bash", "-c", "--"]
+    args: ["while true; do sleep 30; done;"]
+    volumeMounts:
+    - name: git-secret
+      mountPath: /root/.ssh
+  volumes:
+  - name: git-secret
+    secret:
+      secretName: git-creds
+  restartPolicy: Never
+

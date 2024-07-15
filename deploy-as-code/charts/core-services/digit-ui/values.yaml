@@ -31,3 +31,8 @@ extraVolumeMounts: |
   - mountPath: /etc/nginx/conf.d/sub_filter.conf
     name: js-injection
     subPath: sub_filter.conf
+
+serviceAccount: egov-sa 
+
+securityContext:
+  runAsUser: 0

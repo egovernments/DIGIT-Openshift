@@ -68,4 +68,5 @@ env: |
   - name: SECURITY_BASIC_ENABLED
     value: "false"  
   - name: MANAGEMENT_SECURITY_ENABLED
-    value: "false"           
+    value: "false"          
+serviceAccount: egov-sa      
